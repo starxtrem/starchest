@@ -188,7 +188,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer
 end)
 
-  
 RegisterNetEvent('starchest:getInventoryLoaded')
 AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
     local elements = {}
@@ -316,7 +315,5 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
         end
     )
 end)
-
-
 
 -- Devlopped By Starxtrem --
