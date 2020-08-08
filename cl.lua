@@ -31,10 +31,11 @@ local COFFRES = {
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-
+        local star = false
         for k2,v2 in pairs(COFFRES) do
             
-            if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 50 then
+            if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 20 then
+                true
                 DrawMarker(25, v2.x, v2.y, v2.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.5, 2.5, 1.0, 185, 185, 185, 250, false, true, 2, false, false, false, false)
         
                 if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 2.5 then
@@ -172,6 +173,9 @@ Citizen.CreateThread(function()
                 end
             end
         end
+        if not star then
+            Citizen.Wait(2000)
+        end
 	end
 end)
 
@@ -207,7 +211,6 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
                     limitP     = inventory[i].limitP
                 })
             end
-  
         end
     end
   
