@@ -22,9 +22,9 @@ Citizen.CreateThread(function()
 end)
 
 local COFFRES = {
-    ["Tattoosud"] = { name = "Tattoosud", x = 1315.77, y = -1658.13, z = 50.24, maxPoids = 500.0 },
+    ["Tattoosud"] = { name = "Tattoosud", x = 1315.77, y = -1658.13, z = 50.24},
 
-    ["Tattoonord"] = { name = "Tattoonord", x = 1859.65, y = 3750.89, z = 32.05, maxPoids = 500.0 }
+    ["Tattoonord"] = { name = "Tattoonord", x = 1859.65, y = 3750.89, z = 32.05}
 }
 
 -- Key Controls
@@ -35,7 +35,7 @@ Citizen.CreateThread(function()
         for k2,v2 in pairs(COFFRES) do
             
             if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 20 then
-                true
+                star = true
                 DrawMarker(25, v2.x, v2.y, v2.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.5, 2.5, 1.0, 185, 185, 185, 250, false, true, 2, false, false, false, false)
         
                 if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 2.5 then
@@ -83,10 +83,6 @@ Citizen.CreateThread(function()
                                                 end
                                             end
 
-                                            if data2.current.value == 'remove_player' then
-                                                TriggerServerEvent("starchest:remove_player", Pname, data2.current.steam)
-                                            end
-
                                         end, function(data2, menu2)
                                             menu2.close()
                                         end)
@@ -95,10 +91,6 @@ Citizen.CreateThread(function()
 
                                     if data.current.value == "inv" then
                                         TriggerServerEvent("starchest:getInventory", Pname)
-                                    end
-
-                                    if data.current.value == "weapons" then
-                                        TriggerEvent("Star_weapon:open:starchest", Pname)
                                     end
 
                                     if data.current.value == 'money' then
@@ -113,8 +105,9 @@ Citizen.CreateThread(function()
                                                     { label = "Coffre : " .. propreC .. " $ | " .. saleC .. " $", value = "none" },
                                                     { label = "---------------", value = "none" },
                                                     { label = "Déposer de l'argent", value = "deposit_money" },
-                                                    { label = "Déposer de l'argent sale", value = "deposit_sale" },
                                                     { label = "Récupérer de l'argent", value = "retirer_money" },
+                                                    { label = "---------------", value = "none" },
+                                                    { label = "Déposer de l'argent sale", value = "deposit_sale" },
                                                     { label = "Récupérer de l'argent sale", value = "retirer_sale" }
                                                 }
                                             }, function(data2, menu2)
@@ -196,8 +189,7 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
     table.insert(elements, {
         label     = 'Déposer',
         count     = 0,
-        value     = 'deposit',
-        ppi = 1.0
+        value     = 'deposit'
     })
   
     if inventory ~= nil and #inventory > 0 then
@@ -206,8 +198,7 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
                 table.insert(elements, {
                     label     = inventory[i].label .. ' x' .. inventory[i].count,
                     count     = inventory[i].count,
-                    value     = inventory[i].name,
-                    limitP     = inventory[i].limitP
+                    value     = inventory[i].name
                 })
             end
         end
@@ -230,8 +221,7 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
                             label  = PlayerData.inventory[i].label .. ' x' .. PlayerData.inventory[i].count,
                             count  = PlayerData.inventory[i].count,
                             value  = PlayerData.inventory[i].name,
-                            name   = PlayerData.inventory[i].label,
-                            limitP  = PlayerData.inventory[i].limitP
+                            name   = PlayerData.inventory[i].label
                         })
                     end
                 end
