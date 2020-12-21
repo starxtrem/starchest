@@ -1,29 +1,42 @@
 -- Devlopped By Starxtrem --
-
+local safe = {}
 ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+ESX.RegisterServerCallback('starcheckpos', function(source, cb)
+  local _source = source
+  MySQL.Async.fetchAll('SELECT * FROM `starchest_access` WHERE `granted` = @granted ', { ['@granted'] = 1}, function(result)
+    local position = {}
+    for i,v in ipairs(result) do
+      table.insert(position, {name = v.lieu, posx = v.x, posy = v.y, posz = v.z})
+    end
+    cb(position)
+  end)
+end)
+
 ESX.RegisterServerCallback('starchest:can_open', function(source, cb, namePoint)
-    local _source = source
+  local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-    
-    MySQL.Async.fetchAll('SELECT * FROM `starchest_access` WHERE `lieu` = @lieu ;',
+    MySQL.Async.fetchAll('SELECT * FROM `starchest_access` WHERE `lieu` = @lieu ',
 	{
-        ['@lieu'] = namePoint
+      ['@lieu'] = namePoint
     }, function(result)
-        
         local members = {}
         local isOK = false
+        local myclee = false
 
         for i,v in ipairs(result) do
-            table.insert( members, {name = v.label, steam = v.owner} )
+            table.insert( members, {name = v.label, steam = v.owner, proprio = v.granted} )
             if v.owner == xPlayer.identifier then
                 isOK = true
+                if v.granted == 1 then
+                  myclee = true
+                end
             end
         end
 
-        cb(isOK, namePoint, members)
+        cb(isOK, namePoint, members, myclee)
 
 	end)
 end)
@@ -34,29 +47,29 @@ AddEventHandler("starchest:add_player", function(pname, target)
 
     local xTarget = ESX.GetPlayerFromId(target)
 
-    MySQL.Async.execute('INSERT INTO starchest_access (owner, lieu, label) VALUES (@owner, @lieu, @label)',
+    MySQL.Async.execute('INSERT INTO starchest_access (owner, lieu, label, granted) VALUES (@owner, @lieu, @label, @granted)',
 	{
 		['@owner']   = xTarget.identifier,
 		['@lieu']   = pname,
-		['@label']   = xTarget.name
+		['@label']   = xTarget.name,
+		['@granted']   = 0
     })
-    
+
 	TriggerClientEvent('esx:showNotification', _source, "Le joueur à reçu des clés")
 	TriggerClientEvent('esx:showNotification', target, "Vous avez reçu les clés pour le coffre : " .. pname)
-	
+
 end)
 
 RegisterServerEvent("starchest:remove_player")
-AddEventHandler("starchest:remove_player", function(pname, steam)
+AddEventHandler("starchest:remove_player", function(steam ,pname)
     local _source = source
-
-    MySQL.Async.execute('DELETE FROM starchest_access WHERE owner = @owner AND lieu = @lieu ;', {
+    MySQL.Async.execute('DELETE FROM starchest_access WHERE owner = @owner AND lieu = @lieu', {
         ['@owner'] = steam,
         ['@lieu'] = pname
     })
-    
+
 	TriggerClientEvent('esx:showNotification', _source, "Le joueur à perdu ses clés")
-	
+
 end)
 
 AddEventHandler("esxStar:ReloadESX", function (obj)
@@ -110,7 +123,6 @@ RegisterServerEvent('starchest:removeInventoryItem')
 AddEventHandler('starchest:removeInventoryItem', function(plate, item, count)
   local _source = source
   local xPlayer_pre  = ESX.GetPlayerFromId(_source)
-  print(ESX.GetPlayerFromId(_source))
   if xPlayer_pre ~= nil or xPlayer_pre.canCarryItems({{item, count}}) then
 
     MySQL.Async.fetchAll(
@@ -144,7 +156,7 @@ AddEventHandler('starchest:removeInventoryItem', function(plate, item, count)
         else
           TriggerClientEvent('esx:showNotification', _source, "Il n'y a pas assez dans le coffre")
         end
-  
+
       end)
 
   else
@@ -198,12 +210,12 @@ ESX.RegisterServerCallback('starchest:fetchMoney', function(source, cb, namePoin
   local _source = source
   local xPlayer = ESX.GetPlayerFromId(_source)
 	local account = xPlayer.getAccount('black_money')
-    
+
     MySQL.Async.fetchAll('SELECT * FROM `starchest_2` WHERE `lieu` = @lieu ;',
     {
         ['@lieu'] = namePoint
     }, function(result)
-      
+
         local a = 0
         local b = 0
 
@@ -255,6 +267,60 @@ AddEventHandler('starchest:money:deposit_money', function(plate, amount)
     else
       TriggerClientEvent('esx:showNotification', _source, "Petit soucis, ré-essaye")
     end
+end)
+
+RegisterServerEvent('starchest:sendBill')
+AddEventHandler('starchest:sendBill', function(target, lieu, amount)
+  local _target = target
+  local tPlayer  = ESX.GetPlayerFromId(_target)
+  if tPlayer ~= nil then
+    TriggerClientEvent('starchest:QuestionBill', _target, source, lieu, amount)
+  end
+end)
+
+RegisterServerEvent('starchest:AccesptPayementBills')
+AddEventHandler('starchest:AccesptPayementBills', function(target, amount, lieu, a)
+  local _source = source
+  local xPlayer  = ESX.GetPlayerFromId(_source)
+  local tPlayer  = ESX.GetPlayerFromId(target)
+
+  if xPlayer ~= nil then
+    if a then
+      MySQL.Async.fetchAll(
+        'SELECT * FROM starchest_2 WHERE lieu = @lieu;',
+        {
+          ['@lieu'] = lieu
+        },
+        function(result1)
+
+          if amount > 0 and xPlayer.getBank() >= amount then
+
+              MySQL.Async.fetchAll(
+              'INSERT INTO starchest_2 (money,black,lieu) VALUES (@mon,@bla,@lieu) ON DUPLICATE KEY UPDATE money=money + @mon',
+              {
+                ['@lieu'] = lieu,
+                ['@mon'] = amount,
+                ['@bla'] = 0
+              },
+              function(result)
+                local xPlayer = ESX.GetPlayerFromId(_source)
+                if xPlayer ~= nil then
+                  xPlayer.removeBank(amount)
+                  xPlayer.showNotification("Vous avez payé une facture de $"..amount)
+                  tPlayer.showNotification(xPlayer.name.." à payé une facture de $"..amount)
+                end
+              end)
+
+          else
+            xPlayer.showNotification("Vous n\'avez pas l'argent sur le compte en banque...")
+            tPlayer.showNotification("la carte cb de "..xPlayer.name.." à été rejeté")
+          end
+        end)
+      else
+        xPlayer.showNotification('Vous avez refuser la facture de '..amount..'$')
+        tPlayer.showNotification(xPlayer.name.." à déchiré la facture sous vos yeux de cocker... Sniff")
+      end
+  end
 end)
 
 
@@ -383,5 +449,71 @@ AddEventHandler('starchest:money:retirer_sale', function(plate, amount)
     end
 end)
 
+--coffre utilisable
+
+ESX.RegisterUsableItem('coffreauto', function(source)
+	local _source = source
+  local xPlayer = ESX.GetPlayerFromId(_source)
+  local thePos = GetEntityCoords(GetPlayerPed(xPlayer.source))
+  local numbercoffre = math.random(5000)
+  xPlayer.removeInventoryItem('coffreauto', 1)
+
+    MySQL.Async.execute('INSERT INTO starchest_access (owner, lieu, label,x ,y, z, granted) VALUES (@owner, @lieu, @label, @x, @y, @z, @granted)',
+    {
+      ['@owner']   = xPlayer.identifier,
+      ['@lieu']   = 'Coffre'..numbercoffre,
+      ['@label']   = xPlayer.name,
+      ['@x']   = thePos.x,
+      ['@y']   = thePos.y,
+      ['@z']   = thePos.z,
+      ['@granted']   = 1
+    })
+
+	xPlayer.showNotification('Félicitation ! Vous avez possez votre coffre !')
+  TriggerClientEvent('starchest:updatePos', -1, 'Coffre'..numbercoffre, thePos.x, thePos.y, thePos.z)
+end)
+
+
+-- annonce
+
+RegisterServerEvent('starchest:annonce')
+AddEventHandler('starchest:annonce', function(result)
+  local _source  = source
+  local xPlayer  = ESX.GetPlayerFromId(_source)
+  local xPlayers = ESX.GetPlayers()
+  local text     = result
+  for i=1, #xPlayers, 1 do
+    local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+    TriggerClientEvent('starchest:annonce', xPlayers[i],text)
+  end
+
+  Wait(8000)
+
+  local xPlayers = ESX.GetPlayers()
+  for i=1, #xPlayers, 1 do
+    local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+    TriggerClientEvent('starchest:annoncestop', xPlayers[i])
+  end
+
+end)
+
+-- visu coffre
+
+RegisterServerEvent('starchest:checkcoffredist')
+AddEventHandler('starchest:checkcoffredist',function(name, status, x, y, z)
+  local _source = source
+  if safe[name] == nil then
+    safe[name] = false
+  end
+  if status == true then
+    if safe[name] == false then
+      safe[name] = true
+      TriggerClientEvent('starchest:checkcoffredistcl',source, x, y, z, name)
+    end
+  --elseif status == false then
+   -- safe[name] = false
+   -- TriggerClientEvent('starchest:checkcoffredistdelcl',-1)
+  end
+end)
 
 -- Devlopped By Starxtrem --
