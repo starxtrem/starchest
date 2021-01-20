@@ -1,6 +1,6 @@
 author 'Starxtrem'
 description 'Starchest dev By starxtrem'
-version '1.0'
+version '2.0'
 
 client_scripts {
     "cl.lua"
