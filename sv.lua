@@ -510,9 +510,6 @@ AddEventHandler('starchest:checkcoffredist',function(name, status, x, y, z)
       safe[name] = true
       TriggerClientEvent('starchest:checkcoffredistcl',source, x, y, z, name)
     end
-  --elseif status == false then
-   -- safe[name] = false
-   -- TriggerClientEvent('starchest:checkcoffredistdelcl',-1)
   end
 end)
 
