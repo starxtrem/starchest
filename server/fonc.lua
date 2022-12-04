@@ -96,5 +96,25 @@ RegisterCommand('addchest', function(source)
     end
 end)
 
+-- Delete Chest admin
+
+RegisterCommand('deletechest', function(source , args)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local name = args[1]
+    local namegood = 'Coffre'..name 
+  
+    if xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin' then
+        MySQL.Async.execute('DELETE FROM starchest_access WHERE lieu = @name',
+        {
+          ['@name'] = namegood
+        })
+        xPlayer.showNotification(_U('delete_chestok'))
+        TriggerClientEvent('starchest:deletechest', -1, namegood)
+    else
+      xPlayer.showNotification(_U('no_admin'))
+    end
+end)
+
 
 -- Devlopped By Starxtrem --
