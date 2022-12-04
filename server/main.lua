@@ -469,7 +469,7 @@ ESX.RegisterUsableItem('coffreauto', function(source)
       ['@granted']   = 1
     })
 
-	xPlayer.showNotification('Félicitation ! Vous avez possez votre coffre !')
+	xPlayer.showNotification(_U('chest_pos_sucess'))
   TriggerClientEvent('starchest:updatePos', -1, 'Coffre'..numbercoffre, thePos.x, thePos.y, thePos.z)
 end)
 

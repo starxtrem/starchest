@@ -7,5 +7,3 @@ Config.PropsChest = false  -- If you want to use props turn this to true and onl
 Config.PropsChestName = 'prop_ld_int_safe_01' -- Props name
 
 Config.DeleteChestPlayer = false -- Delete chest by player
-
-Config.Admin = false -- Coming soon
