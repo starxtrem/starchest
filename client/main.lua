@@ -30,6 +30,17 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer
 end)
 
+-- Update Position
+RegisterNetEvent('starchest:updatePos')
+AddEventHandler('starchest:updatePos', function(name, x, y, z)
+	table.insert(COFFRES, {
+		name     = name,
+		x     = tonumber(x),
+		y     = tonumber(y),
+		z     = tonumber(z)
+	})
+end)
+
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)

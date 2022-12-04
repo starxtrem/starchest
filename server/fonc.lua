@@ -1,3 +1,5 @@
+-- Devlopped By Starxtrem --
+
 -- Check version
 
 Citizen.CreateThread( function()
@@ -66,3 +68,33 @@ AddEventHandler('starchest:delete',function(name)
     ['@name'] = name
   })
 end)
+
+-- Add Chest admin
+
+RegisterCommand('addchest', function(source)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local thePos = GetEntityCoords(GetPlayerPed(xPlayer.source))
+    local numbercoffre = math.random(5000)
+  
+    if xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin' then
+        MySQL.Async.execute('INSERT INTO starchest_access (owner, lieu, label,x ,y, z, granted) VALUES (@owner, @lieu, @label, @x, @y, @z, @granted)',
+        {
+          ['@owner']   = xPlayer.identifier,
+          ['@lieu']   = 'Coffre'..numbercoffre,
+          ['@label']   = xPlayer.name,
+          ['@x']   = thePos.x,
+          ['@y']   = thePos.y,
+          ['@z']   = thePos.z,
+          ['@granted']   = 1
+        })
+
+	    xPlayer.showNotification('Félicitation ! Vous avez possez votre coffre !')
+        TriggerClientEvent('starchest:updatePos', -1, 'Coffre'..numbercoffre, thePos.x, thePos.y, thePos.z)
+    else
+      xPlayer.showNotification(_U('not_admin'))
+    end
+end)
+
+
+-- Devlopped By Starxtrem --

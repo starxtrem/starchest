@@ -1,3 +1,5 @@
+-- Devlopped By Starxtrem --
+
 -- Annonce entreprise
 
 function Message()
@@ -15,17 +17,6 @@ function Message()
     end)
 end
 
--- Update Position
-RegisterNetEvent('starchest:updatePos')
-AddEventHandler('starchest:updatePos', function(name, x, y, z)
-	table.insert(COFFRES, {
-		name     = name,
-		x     = tonumber(x),
-		y     = tonumber(y),
-		z     = tonumber(z)
-	})
-end)
-
 --Bills Question
 
 RegisterNetEvent('starchest:QuestionBill')
@@ -36,3 +27,5 @@ AddEventHandler('starchest:QuestionBill', function(sousource, lieu, amount)
 	QuestionAmount = amount
 	QuestionLieu = lieu
 end)
+
+-- Devlopped By Starxtrem --
