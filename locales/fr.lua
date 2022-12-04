@@ -2,19 +2,16 @@ Locales['fr'] = {
     ['invalid_quantity'] = "~r~ Quantité invalide !",
     ['inventory_full'] = "~r~ Tu en porte trop !",
     ['invalid_amount'] = "~r~ Montant invalide !",
+    ['no_player_found'] = "~r~ Pas de joueur à proximité !",
 
     -- Delete chest
     ['delete_chest'] = "Supprimer le coffre",
-    ['delete_chest_text'] = "Voulez-vous supprimer le coffre ?",
-    ['delete_chest_no'] = "Non",
-    ['delete_chest_yes'] = "Oui",
     ['delete_chestok'] = "~r~ Coffre supprimer !",
 
     -- Keys
     ['no_key'] = "~r~ Vous n'avez pas de clés !",
     ['keys_gest'] = "Gestion des clés",
     ['invite_player'] = "Inviter le joueur proche",
-    ['no_player_found'] = "~r~ Pas de joueur à proximité !",
     ['chest_name_keys'] = "Clés du ",
 
     -- Announce
@@ -22,9 +19,7 @@ Locales['fr'] = {
 
     -- Facturation
     ['billing'] = "Facturation",
-    ['no_player_nearby'] = "~r~ Pas de joueur à proximité !",
     ['billing_amount'] = "Montant de la facture",
-    ['amount_invalid'] = "~r~ Montant invalide !",
 
 
     -- VSersion
