@@ -138,7 +138,7 @@ Citizen.CreateThread(function()
                                             end
                                             table.insert(els, {label = _U('invite_player'), value = "add_player"})
                                             for i,v in ipairs(members) do
-                                                table.insert(els, {label = "Retirer " .. v.name, value = "remove_player", steam = v.steam })
+                                                table.insert(els, {label = _U('remove_keys') .. v.name, value = "remove_player", steam = v.steam })
                                             end
                                         else
                                             table.insert(els, {label = "Interdit"})

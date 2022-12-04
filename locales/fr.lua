@@ -4,6 +4,8 @@ Locales['fr'] = {
     ['invalid_amount'] = "~r~ Montant invalide !",
     ['no_player_found'] = "~r~ Pas de joueur à proximité !",
     ['chest_pos_sucess'] = "Félicitation ! Vous avez possez votre coffre !",
+    ['no_space'] = "~r~ Tu n'as plus de place sur toi",
+    ['not_enough'] = "~r~ Tu n'as pas assez sur toi",
 
     -- Delete chest
     ['delete_chest'] = "Supprimer le coffre",
@@ -14,6 +16,9 @@ Locales['fr'] = {
     ['keys_gest'] = "Gestion des clés",
     ['invite_player'] = "Inviter le joueur proche",
     ['chest_name_keys'] = "Clés du ",
+    ['player_keys_ok'] = "Le joueur à reçu des clés",
+    ['player_keys_remove'] = "Le joueur à perdu ses clés",
+    ['remove_keys'] = "Retirer à ",
 
     -- Announce
     ['label_announce'] = "Entreprise",

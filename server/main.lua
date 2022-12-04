@@ -55,7 +55,7 @@ AddEventHandler("starchest:add_player", function(pname, target)
 		['@granted']   = 0
     })
 
-	TriggerClientEvent('esx:showNotification', _source, "Le joueur à reçu des clés")
+	TriggerClientEvent('esx:showNotification', _source, _U('player_keys_ok'))
 	TriggerClientEvent('esx:showNotification', target, "Vous avez reçu les clés pour le coffre : " .. pname)
 
 end)
@@ -68,7 +68,7 @@ AddEventHandler("starchest:remove_player", function(steam ,pname)
         ['@lieu'] = pname
     })
 
-	TriggerClientEvent('esx:showNotification', _source, "Le joueur à perdu ses clés")
+	TriggerClientEvent('esx:showNotification', _source, _U('player_keys_remove'))
 
 end)
 
@@ -151,16 +151,16 @@ AddEventHandler('starchest:removeInventoryItem', function(plate, item, count)
             end)
 
           else
-            TriggerClientEvent('esx:showNotification', _source, "Il n'y a pas assez dans le coffre")
+            TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
           end
         else
-          TriggerClientEvent('esx:showNotification', _source, "Il n'y a pas assez dans le coffre")
+          TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
         end
 
       end)
 
   else
-    TriggerClientEvent('esx:showNotification', _source, "Tu n'as plus de place sur toi")
+    TriggerClientEvent('esx:showNotification', _source, _U('not_space'))
   end
 end)
 
@@ -200,7 +200,7 @@ AddEventHandler('starchest:addInventoryItem', function(plate, item, count, name)
       end)
 
     else
-      TriggerClientEvent('esx:showNotification', _source, "Tu n'as pas assez sur toi")
+      TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
     end
 end)
 
