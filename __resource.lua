@@ -1,14 +1,23 @@
 author 'Starxtrem'
 description 'Starchest dev By starxtrem'
-version '2.0'
+version '2.1'
 
 client_scripts {
-    "cl.lua"
+    '@es_extended/locale.lua',
+    "client/*.lua",
+	'locales/*.lua',
+    'config.lua',
 }
 
 server_scripts {
+    '@es_extended/locale.lua',
 	'@mysql-async/lib/MySQL.lua',
-    "sv.lua"
+    "server/*.lua",
+	'locales/*.lua',
+    'config.lua',
 }
 
+dependencies {
+	'es_extended',
+}
 -- Devlopped By Starxtrem --

@@ -15,12 +15,12 @@ Citizen.CreateThread(function()
     Citizen.Wait(1500)
     ESX.TriggerServerCallback('starcheckpos', function(position)
         for i,v in ipairs(position) do
-					table.insert(COFFRES, {
-							name     = v.name,
-							x     = tonumber(v.posx),
-							y     = tonumber(v.posy),
-							z     = tonumber(v.posz)
-					})
+			table.insert(COFFRES, {
+        	    name     = v.name,
+			    x     = tonumber(v.posx),
+			    y     = tonumber(v.posy),
+			    z     = tonumber(v.posz)
+			})
         end
     end)
 end)
@@ -28,25 +28,6 @@ end)
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer
-end)
-
-RegisterNetEvent('starchest:updatePos')
-AddEventHandler('starchest:updatePos', function(name, x, y, z)
-	table.insert(COFFRES, {
-		name     = name,
-		x     = tonumber(x),
-		y     = tonumber(y),
-		z     = tonumber(z)
-	})
-end)
-
-RegisterNetEvent('starchest:QuestionBill')
-AddEventHandler('starchest:QuestionBill', function(sousource, lieu, amount)
-	ESX.ShowNotification('Appuyez sur ~b~Y~w~ pour payer ou ~b~N~w~ pour refuser ('..amount..'$)')
-	QuestionSource = sousource
-	QuestionBill = true
-	QuestionAmount = amount
-	QuestionLieu = lieu
 end)
 
 Citizen.CreateThread(function()
@@ -81,7 +62,7 @@ RegisterNetEvent('starchest:checkcoffredistcl')
 AddEventHandler('starchest:checkcoffredistcl', function(x, y, z, ff)
     if starcount[ff] == nil then
         starcount[ff] = true
-        safe = CreateObject("prop_ld_int_safe_01", x, y, z, true, true, true)
+        safe = CreateObject(Config.PropsChestName, x, y, z, true, true, true)
         PlaceObjectOnGroundProperly(safe)
         FreezeEntityPosition(safe, true)
     end
@@ -96,12 +77,14 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(1500)
-        if star == true then
-            for k2,v2 in pairs(COFFRES) do
-                if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 20 then
-                    TriggerServerEvent('starchest:checkcoffredist',v2.name, true, v2.x, v2.y, v2.z)
+    if Config.PropsChest then
+        while true do
+            Citizen.Wait(1500)
+            if star == true then
+                for k2,v2 in pairs(COFFRES) do
+                    if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 20 then
+                        TriggerServerEvent('starchest:checkcoffredist',v2.name, true, v2.x, v2.y, v2.z)
+                    end
                 end
             end
         end
@@ -114,6 +97,9 @@ Citizen.CreateThread(function()
         for k2,v2 in pairs(COFFRES) do
             if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 20 then
                 star = true
+                if Config.PropsChest == false then
+                    DrawMarker(27, v2.x, v2.y, v2.z - 0.9, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.6, 0.6, 0.6, 25, 28, 24, 250, false, true, 2, false, false, false, false)
+                end
                 if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), v2.x, v2.y, v2.z, true) < 2.5 then
                     if IsControlJustReleased(0, 38) then -- E
                         ESX.TriggerServerCallback('starchest:can_open', function (allowed, Pname, members, proprio)
@@ -121,13 +107,13 @@ Citizen.CreateThread(function()
                                 ESX.UI.Menu.CloseAll()
                                 ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'coffre_main',
                                 {
-                                    title    = "Coffre " .. Pname,
+                                    title    = Pname,
                                     elements = {
-                                        { label = "Gestion des clés", value = "manage" },
-                                        { label = "Facturation", value = "fact" },
+                                        { label = _U('keys_gest'), value = "manage" },
+                                        { label = _U('billing'), value = "fact" },
                                         { label = "Inventaire", value = "inv" },
                                         { label = "Coffre d'argent", value = "money" },
-                                        {label = 'Passer une annonce', value = 'announce'}
+                                        { label = "Passer une annonce", value = 'announce'},
                                     }
                                 }, function(data, menu)
 
@@ -136,7 +122,10 @@ Citizen.CreateThread(function()
                                     if data.current.value == 'manage' then
                                         local els = {}
                                         if proprio == true then
-                                            table.insert(els, {label = "Inviter le joueur proche", value = "add_player"})
+                                            if Config.DeleteChestPlayer then
+                                                table.insert(els, {label = "Supprimer le coffre", value = "delete"})
+                                            end
+                                            table.insert(els, {label = _U('invite_player'), value = "add_player"})
                                             for i,v in ipairs(members) do
                                                 table.insert(els, {label = "Retirer " .. v.name, value = "remove_player", steam = v.steam })
                                             end
@@ -145,7 +134,7 @@ Citizen.CreateThread(function()
                                         end
                                         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'coffre_manage',
                                         {
-                                            title    = "Clés du coffre " .. Pname,
+                                            title    = "Clés du " .. Pname,
                                             elements = els
                                         }, function(data2, menu2)
 
@@ -156,12 +145,16 @@ Citizen.CreateThread(function()
                                                 if closestDistance > 0 and closestDistance < 4 then
                                                     TriggerServerEvent("starchest:add_player", Pname, GetPlayerServerId(closestPlayer))
                                                 else
-                                                    ESX.ShowNotification("Pas de joueur à proximité")
+                                                    ESX.ShowNotification(_U('no_player_found'))
                                                 end
                                             end
 
                                             if data2.current.value == 'remove_player' then
                                                 TriggerServerEvent("starchest:remove_player", data2.current.steam, Pname)
+                                            end
+
+                                            if data2.current.value == 'delete' then
+                                                TriggerServerEvent("starchest:delete", Pname)
                                             end
 
                                         end, function(data2, menu2)
@@ -176,11 +169,11 @@ Citizen.CreateThread(function()
                                         }, function(data, menu)
                                             local amount = tonumber(data.value)
                                             if amount == nil or amount < 0 then
-                                                ESX.ShowNotification('Montant invalide')
+                                                ESX.ShowNotification(_U('invalid_amount'))
                                             else
                                                 local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
                                                 if closestPlayer == -1 or closestDistance > 3.0 then
-                                                    ESX.ShowNotification('Personne devant vous !')
+                                                    ESX.ShowNotification(_U('no_player_found'))
                                                 else
                                                     menu.close()
                                                     TriggerServerEvent('starchest:sendBill', GetPlayerServerId(closestPlayer), Pname, amount)
@@ -233,7 +226,7 @@ Citizen.CreateThread(function()
                                                             TriggerServerEvent("starchest:money:" .. ACTION, Pname, quantity)
 
                                                         else
-                                                            ESX.ShowNotification("Quantité invalide")
+                                                            ESX.ShowNotification(_U('invalid_quantity'))
                                                         end
                                                         ESX.UI.Menu.CloseAll()
 
@@ -253,7 +246,6 @@ Citizen.CreateThread(function()
 
                                     end
                                     if data.current.value == 'announce' then
-                                        messagenotfinish = true
                                         Message()
                                     end
 
@@ -262,7 +254,7 @@ Citizen.CreateThread(function()
                                 end)
 
                             else
-                                ESX.ShowNotification("Tu n'as pas les clés")
+                                ESX.ShowNotification(_U('no_key'))
                             end
                         end, v2.name)
 
@@ -270,83 +262,12 @@ Citizen.CreateThread(function()
 
                     end
                 end
-            --else
-            --    star = false
             end
         end
         if not star then
             Citizen.Wait(2000)
         end
 	end
-end)
-
-
-function Message()
-    Citizen.CreateThread(function()
-      while messagenotfinish do
-          Citizen.Wait(1)
-  
-        DisplayOnscreenKeyboard(1, "FMMC_MPM_NA", "", "", "", "", "", 30)
-          while (UpdateOnscreenKeyboard() == 0) do
-              DisableAllControlActions(0);
-             Citizen.Wait(1)
-          end
-          if (GetOnscreenKeyboardResult()) then
-              local result = GetOnscreenKeyboardResult()
-              messagenotfinish = false
-             TriggerServerEvent('starchest:annonce',result)
-  
-          end
-      end
-    end)
-end
-
-function DrawAdvancedTextCNN (x,y ,w,h,sc, text, r,g,b,a,font,jus)
-    SetTextFont(font)
-    SetTextProportional(0)
-    SetTextScale(sc, sc)
-    N_0x4e096588b13ffeca(jus)
-    SetTextColour(r, g, b, a)
-    SetTextDropShadow(0, 0, 0, 0,255)
-    SetTextEdge(1, 0, 0, 0, 255)
-    SetTextDropShadow()
-    SetTextOutline()
-    SetTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawText(x - 0.1+w, y - 0.02+h)
-end
-
- Citizen.CreateThread(function()
-        while true do
-            Citizen.Wait(1)
-
-                if (affichenews == true) then
-
-                DrawRect(0.494, 0.227, 5.185, 0.118, 0, 0, 0, 150)
-                DrawAdvancedTextCNN(0.588, 0.14, 0.005, 0.0028, 0.8, "~r~ Annonce entreprise ~d~", 255, 255, 255, 255, 1, 0)
-                DrawAdvancedTextCNN(0.586, 0.199, 0.005, 0.0028, 0.6, texteafiche, 255, 255, 255, 255, 7, 0)
-                DrawAdvancedTextCNN(0.588, 0.246, 0.005, 0.0028, 0.4, "", 255, 255, 255, 255, 0, 0)
-
-                else
-                Citizen.Wait(500)
-
-            end
-       end
-    end)
-
-
-
-RegisterNetEvent('starchest:annonce')
-AddEventHandler('starchest:annonce', function(text)
-    texteafiche = text
-    affichenews = true
-
-  end)
-
-
-RegisterNetEvent('starchest:annoncestop')
-AddEventHandler('starchest:annoncestop', function()
-    affichenews = false
 end)
 
 local PlayerData = {}
@@ -414,7 +335,7 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
                                 if quantity > 0 and quantity <= tonumber(data3.current.count)  then
                                         TriggerServerEvent('starchest:addInventoryItem', Actual_pname, data3.current.value, quantity, data3.current.name)
                                 else
-                                    ESX.ShowNotification('~r~ Quantité invalide')
+                                    ESX.ShowNotification(_U('invalid_quantity'))
                                 end
 
                                 ESX.UI.Menu.CloseAll()
@@ -457,10 +378,10 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
                                 TriggerServerEvent('starchest:removeInventoryItem', Actual_pname, data.current.value, quantity)
 
                             else
-                                ESX.ShowNotification('~r~ Tu en porte trop')
+                                ESX.ShowNotification(_U('inventory_full'))
                             end
                         else
-                            ESX.ShowNotification('~r~ Quantité invalide')
+                            ESX.ShowNotification(_U('invalid_quantity'))
                         end
 
                         ESX.UI.Menu.CloseAll()
