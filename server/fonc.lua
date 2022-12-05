@@ -12,7 +12,7 @@ Citizen.CreateThread( function()
 
             if curVersion ~= responseText then
                 print("###############################")
-                print(_U('version_outdated').. "\n" ..curVersion.." ".._U('version_to').." "..responseText.."\nhttps://github.com"..updatePath.."")
+                print(_U('version_outdated').. "\nhttps://github.com"..updatePath.."")
                 print("###############################")
             else
                 print(_U('version_current'))
