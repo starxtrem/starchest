@@ -383,7 +383,6 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
                             end
                         end
 
-
                         if quantity > 0 and quantity <= tonumber(data.current.count) then
                             if not max then
                                 TriggerServerEvent('starchest:removeInventoryItem', Actual_pname, data.current.value, quantity)
@@ -408,7 +407,6 @@ AddEventHandler('starchest:getInventoryLoaded', function(pname, inventory)
         end
     )
 end)
-
 
 AddEventHandler('onResourceStop',function(resource)
     if resource == GetCurrentResourceName() then

@@ -6,6 +6,8 @@ Locales['fr'] = {
     ['chest_pos_sucess'] = "Félicitation ! Vous avez possez votre coffre !",
     ['no_space'] = "~r~ Tu n'as plus de place sur toi",
     ['not_enough'] = "~r~ Tu n'as pas assez sur toi",
+    ['op_ok'] = "Opération réussi",
+    ['error'] = "~r~ Petit soucis, ré-essaye !",
 
     -- Delete chest
     ['delete_chest'] = "Supprimer le coffre",
@@ -37,4 +39,7 @@ Locales['fr'] = {
 
     -- Admin
     ['no_admin'] = "~r~ Vous n'êtes pas administrateur !",
+
+    --Owner
+    ['change_ownerok'] = "~g~ Le propriétaire à bien été changer !",
 }

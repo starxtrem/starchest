@@ -116,5 +116,26 @@ RegisterCommand('deletechest', function(source , args)
     end
 end)
 
+-- Change owner
+
+RegisterCommand('changeowner', function(source , args)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local name = args[1]
+    local namegood = 'Coffre'..name 
+    local newowner = args[2]
+  
+    if xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin' then
+        MySQL.Async.execute('UPDATE starchest_access SET owner = @newowner WHERE lieu = @name',
+        {
+          ['@name'] = namegood,
+          ['@newowner'] = newowner
+        })
+        xPlayer.showNotification(_U('change_ownerok'))
+    else
+      xPlayer.showNotification(_U('no_admin'))
+    end
+end)
+
 
 -- Devlopped By Starxtrem --

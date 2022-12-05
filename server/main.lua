@@ -76,7 +76,6 @@ AddEventHandler("esxStar:ReloadESX", function (obj)
 	ESX = obj
 end)
 
-
 function getInventoryWeight(inventory)
   local weight = 0
   local itemWeight = 0
@@ -204,7 +203,6 @@ AddEventHandler('starchest:addInventoryItem', function(plate, item, count, name)
     end
 end)
 
-----------------------------------------------------------------------  COFFRE : ARGENT PROPRE ET SALE
 
 ESX.RegisterServerCallback('starchest:fetchMoney', function(source, cb, namePoint)
   local _source = source
@@ -255,17 +253,17 @@ AddEventHandler('starchest:money:deposit_money', function(plate, amount)
               local xPlayer = ESX.GetPlayerFromId(_source)
               if xPlayer ~= nil then
                 xPlayer.removeMoney(count)
-                TriggerClientEvent('esx:showNotification', _source, "Opération réussi")
+                TriggerClientEvent('esx:showNotification', _source, _U('op_ok'))
               end
             end)
 
         else
-          TriggerClientEvent('esx:showNotification', _source, "Tu n'as pas assez / Quantité invalide")
+          TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
         end
       end)
 
     else
-      TriggerClientEvent('esx:showNotification', _source, "Petit soucis, ré-essaye")
+      TriggerClientEvent('esx:showNotification', _source, _U('error'))
     end
 end)
 
@@ -352,17 +350,17 @@ AddEventHandler('starchest:money:deposit_sale', function(plate, amount)
               local xPlayer = ESX.GetPlayerFromId(_source)
               if xPlayer ~= nil then
                 xPlayer.removeAccountMoney('black_money', count)
-                TriggerClientEvent('esx:showNotification', _source, "Opération réussi")
+                TriggerClientEvent('esx:showNotification', _source, _U('op_ok'))
               end
             end)
 
         else
-          TriggerClientEvent('esx:showNotification', _source, "Tu n'as pas assez / Quantité invalide")
+          TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
         end
       end)
 
     else
-      TriggerClientEvent('esx:showNotification', _source, "Petit soucis, ré-essaye")
+      TriggerClientEvent('esx:showNotification', _source, _U('error'))
     end
 end)
 
@@ -393,17 +391,17 @@ AddEventHandler('starchest:money:retirer_money', function(plate, amount)
               local xPlayer = ESX.GetPlayerFromId(_source)
               if xPlayer ~= nil then
                 xPlayer.addMoney(count)
-                TriggerClientEvent('esx:showNotification', _source, "Opération réussi")
+                TriggerClientEvent('esx:showNotification', _source, _U('op_ok'))
               end
             end)
 
         else
-          TriggerClientEvent('esx:showNotification', _source, "Il n'y a pas assez / Quantité invalide")
+          TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
         end
       end)
 
     else
-      TriggerClientEvent('esx:showNotification', _source, "Petit soucis, ré-essaye")
+      TriggerClientEvent('esx:showNotification', _source, _U('error'))
     end
 end)
 
@@ -435,17 +433,17 @@ AddEventHandler('starchest:money:retirer_sale', function(plate, amount)
               local xPlayer = ESX.GetPlayerFromId(_source)
               if xPlayer ~= nil then
                 xPlayer.addAccountMoney('black_money', count)
-                TriggerClientEvent('esx:showNotification', _source, "Opération réussi")
+                TriggerClientEvent('esx:showNotification', _source, _U('op_ok'))
               end
             end)
 
         else
-          TriggerClientEvent('esx:showNotification', _source, "Il n'y a pas assez / Quantité invalide")
+          TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
         end
       end)
 
     else
-      TriggerClientEvent('esx:showNotification', _source, "Petit soucis, ré-essaye")
+      TriggerClientEvent('esx:showNotification', _source, _U('error'))
     end
 end)
 
