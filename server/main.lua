@@ -203,7 +203,6 @@ AddEventHandler('starchest:addInventoryItem', function(plate, item, count, name)
     end
 end)
 
-
 ESX.RegisterServerCallback('starchest:fetchMoney', function(source, cb, namePoint)
   local _source = source
   local xPlayer = ESX.GetPlayerFromId(_source)
@@ -321,7 +320,6 @@ AddEventHandler('starchest:AccesptPayementBills', function(target, amount, lieu,
   end
 end)
 
-
 RegisterServerEvent('starchest:money:deposit_sale')
 AddEventHandler('starchest:money:deposit_sale', function(plate, amount)
   local _source = source
@@ -364,7 +362,6 @@ AddEventHandler('starchest:money:deposit_sale', function(plate, amount)
     end
 end)
 
-
 RegisterServerEvent('starchest:money:retirer_money')
 AddEventHandler('starchest:money:retirer_money', function(plate, amount)
   local _source = source
@@ -404,7 +401,6 @@ AddEventHandler('starchest:money:retirer_money', function(plate, amount)
       TriggerClientEvent('esx:showNotification', _source, _U('error'))
     end
 end)
-
 
 RegisterServerEvent('starchest:money:retirer_sale')
 AddEventHandler('starchest:money:retirer_sale', function(plate, amount)

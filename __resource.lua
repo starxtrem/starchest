@@ -1,6 +1,6 @@
 author 'Starxtrem'
 description 'Starchest dev By starxtrem'
-version '2.1'
+version '2.3'
 
 client_scripts {
     '@es_extended/locale.lua',

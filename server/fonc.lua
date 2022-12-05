@@ -124,7 +124,7 @@ RegisterCommand('changeowner', function(source , args)
     local newowner = args[2]
   
     if xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin' then
-        MySQL.Async.execute('UPDATE starchest_access SET owner = @newowner WHERE lieu = @name',
+        MySQL.Async.execute('UPDATE starchest_access SET owner = @newowner WHERE lieu = @name AND granted = 1',
         {
           ['@name'] = namegood,
           ['@newowner'] = newowner
