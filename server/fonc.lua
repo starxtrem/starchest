@@ -136,4 +136,13 @@ RegisterCommand('changeowner', function(source , args)
 end)
 
 
+-- Check database table if not exist create
+
+MySQL.ready(function()
+    MySQL.Async.execute('CREATE TABLE IF NOT EXISTS starchest_access (ID INT NOT NULL AUTO_INCREMENT, owner VARCHAR(255) NOT NULL, lieu VARCHAR(255) NOT NULL DEFAULT "0", label TEXT NOT NULL, x VARCHAR(255), y VARCHAR(255), z VARCHAR(255), granted INT NOT NULL DEFAULT "0", PRIMARY KEY (ID))')
+    MySQL.Async.execute('CREATE TABLE IF NOT EXISTS starchest (ID INT NOT NULL AUTO_INCREMENT, item VARCHAR(255) NOT NULL, count INT NOT NULL DEFAULT "0", lieu VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY (ID), UNIQUE KEY (item, lieu))')
+    MySQL.Async.execute('CREATE TABLE IF NOT EXISTS starchest_2 (ID INT NOT NULL AUTO_INCREMENT, money INT NOT NULL, black INT NOT NULL, lieu VARCHAR(255) NOT NULL DEFAULT "", loadout LONGTEXT, PRIMARY KEY (ID), UNIQUE KEY (lieu))')
+end)
+
+
 -- Devlopped By Starxtrem --
