@@ -10,12 +10,10 @@ Citizen.CreateThread( function()
         function checkVersion(err,responseText, headers)
             curVersion = LoadResourceFile(GetCurrentResourceName(), "version") -- make sure the "version" file actually exists in your resource root!
 
-            if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
+            if curVersion ~= responseText then
                 print("###############################")
                 print(_U('version_outdated').. "\n" ..curVersion.." ".._U('version_to').." "..responseText.."\nhttps://github.com"..updatePath.."")
                 print("###############################")
-            elseif tonumber(curVersion) > tonumber(responseText) then
-                print(_U('version_not_found'))
             else
                 print(_U('version_current'))
             end
