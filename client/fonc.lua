@@ -28,4 +28,17 @@ AddEventHandler('starchest:QuestionBill', function(sousource, lieu, amount)
 	QuestionLieu = lieu
 end)
 
+--Command chat
+
+Citizen.CreateThread(function()
+    TriggerEvent('chat:addSuggestion', '/deletechest', 'Delete chest', {
+        { name="Number", help="Number of the chest" }
+    })
+    TriggerEvent('chat:addSuggestion', '/changeowner', 'Change owner of the chest', {
+        { name="Number", help="Number of the chest" },
+        { name="New owner", help="New owner of the chest (steam)" }
+    })
+    TriggerEvent('chat:addSuggestion', '/addchest', 'Add chest')
+end)
+
 -- Devlopped By Starxtrem --
