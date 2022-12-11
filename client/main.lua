@@ -122,9 +122,9 @@ Citizen.CreateThread(function()
                                     elements = {
                                         { label = _U('keys_gest'), value = "manage" },
                                         { label = _U('billing'), value = "fact" },
-                                        { label = "Inventaire", value = "inv" },
-                                        { label = "Coffre d'argent", value = "money" },
-                                        { label = "Passer une annonce", value = 'announce'},
+                                        { label = _U('inventory'), value = "inv" },
+                                        { label = _U('money_chest'), value = "money" },
+                                        { label = _U('announce'), value = 'announce'},
                                     }
                                 }, function(data, menu)
 

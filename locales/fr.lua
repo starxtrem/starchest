@@ -8,6 +8,9 @@ Locales['fr'] = {
     ['not_enough'] = "~r~ Tu n'as pas assez sur toi",
     ['op_ok'] = "Opération réussi",
     ['error'] = "~r~ Petit soucis, ré-essaye !",
+    ['inventory'] = "Inventaire",
+    ['money_chest'] = "Coffre d'argent",
+    ['announce'] = "Annonce",
 
     -- Delete chest
     ['delete_chest'] = "Supprimer le coffre",
